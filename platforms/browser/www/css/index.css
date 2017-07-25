@@ -1,0 +1,38 @@
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
+}
+
+.back {
+    background-image: url("../img/back.jpg");
+    background-size: 100%;
+}
+
+.container > div > a {
+    width: 100%;
+}
+
+.container > .inactive {
+    display: none;
+}
+
+.container > .active {
+    display: block;
+}
+
+.title {
+    color:white;
+    margin-bottom: 110px;
+    transform: skewY(-12deg); 
+
+    font-family: Georgia, serif;
+	font-weight: 400;
+	text-transform: none;
+	font-style: italic;
+	line-height: 60px;
+	font-size: 67px;
+	text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+	position: relative;
+}
