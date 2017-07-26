@@ -22,6 +22,17 @@ $(document).ready(function() {
         mostrarCargando();
         cargarFechas("Matinee");
     });
+
+    $("#passLogin").keypress(function(e) {
+
+        if (e.which === 13) {
+            $("#loginBtn").click();
+        }
+    });
+
+    setTimeout(function() {
+        $("#passLogin").focus();
+    }, 250);
 });
 
 function auth() {
@@ -46,6 +57,8 @@ function cargarFechas(empresa) {
     
     firebase.database().ref('/contacts/' + empresa + "/").once('value').then(function(snapshot) {
         
+        var i = 0;
+
         var contactos = snapshot.val();
 
         for (unAnio in contactos) {
@@ -70,15 +83,20 @@ function cargarFechas(empresa) {
                     tr.append(ver);
 
                     var descarga = $("<td></td>");
-                    var botonDescarga = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ')" role="button">Descargar</a>');
+                    var botonDescarga = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar</a>');
                     descarga.append(botonDescarga);
                     tr.append(descarga);
 
                     var descargado = $("<td></td>");
-                    descargado.html("No");
+                    descargado.html((todos.descargado ? "Si" : "No"));
                     tr.append(descargado);
 
+                    if (!todos.descargado) {
+                        tr.addClass("info");
+                    }
+
                     $("#fechasBody").append(tr);
+                    i++;
                 }
             }
         }
@@ -97,7 +115,7 @@ function detalleContactos(empresa, fecha) {
     window.open(url, 'Detalle contactos', 'height=500, width=500');
 }
 
-function descargarContactos(empresa, fecha) {
+function descargarContactos(empresa, fecha, trIndex) {
     
     firebase.database().ref('/contacts/' + empresa + "/" + fecha + "/").once('value').then(function(snapshot) {
 
@@ -116,8 +134,22 @@ function descargarContactos(empresa, fecha) {
             }
         }
 
-        downloadVCARD(empresa, fecha)
+        downloadVCARD(empresa, fecha);
+        setDescargado(empresa, fecha, trIndex);
     });
+}
+
+function setDescargado(empresa, fecha, trIndex) {
+    var contacts = {};  
+    contacts['/contacts/' + empresa + "/" + fecha + "/descargado"] = true;
+
+    firebase.database().ref().update(contacts);
+
+    var tr = $($("#fechasBody").find("tr")[trIndex]);
+
+    tr.removeClass("info");
+
+    var td = tr.find("td").last().html("Si");
 }
 
 function mostrarCargando() {
