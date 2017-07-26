@@ -54,6 +54,8 @@ function cargarFechas(empresa) {
                 var dias = meses[unMes];
                 for (unDia in dias) {
 
+                    var todos = dias[unDia];
+
                     var tr = $("<tr></tr>");
 
                     var fechaCompleta = unAnio + "/" + unMes + "/" + unDia;
@@ -110,11 +112,11 @@ function descargarContactos(empresa, fecha) {
 
                 var unContacto = ids[unId];
 
-                agregarContactoAVCARD(unContacto);
+                agregarContactoAVCARD(unContacto, empresa, unaEdad);
             }
         }
 
-        downloadVCARD("Contactos.vcf")
+        downloadVCARD(empresa, fecha)
     });
 }
 
