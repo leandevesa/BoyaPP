@@ -103,7 +103,7 @@ function pushContact(unNombre, unApellido, unMail, unCelular,
     var newPostKey = firebase.database().ref().child('posts').push().key;
 
     var contacts = {};  
-    contacts['/contacts/' + empresa + "/" + edad + "/" + fecha + newPostKey] = contact;
+    contacts['/contacts/' + empresa + "/" + fecha + "/" + edad + "/" + newPostKey] = contact;
 
     firebase.database().ref().update(contacts); // upd db
 
@@ -150,7 +150,7 @@ function getFechaEnString() {
     var hoy = new Date();
     var fecha = hoy.getFullYear() + "/";
         fecha += (hoy.getMonth() + 1).toString() + "/";
-        fecha += hoy.getDate().toString() + "/";
+        fecha += hoy.getDate().toString();
 
     return fecha;
 }

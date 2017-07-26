@@ -46,42 +46,21 @@
 <body>
     <div class="app">
         <div class="vertical-center back">
-            <div class="container" style="max-width:700px">
-
-                <center>
-                    <h1 class="title">BoyaPP!</h1>
-                </center>
-
-                <div id="loginDiv" class="active">
-                    <input id="passLogin" style="width:100%;" type="password" />
-                    <br><br>
-                    <a id="loginBtn" class="btn btn-primary btn-lg" href="#" role="button">Entrar</a>
-                    <br><br>
-                    <a class="btn btn-danger btn-lg" href="index.html" role="button">volver</a>
-                </div>
-
-                <div id="menuDiv" class="inactive">
-                    <a id="verContactosMatinee" class="btn btn-success btn-lg" href="#" role="button">Contactos Matinee</a>
-                    <br><br>
-                    <a id="verContactosJump" class="btn btn-info btn-lg" href="#" role="button">Contactos Jump</a>
-                </div>
-
-                <div id="fechasDiv" class="inactive">
+            <div class="container" style="width:100%">
+                
+                <div id="contactosDiv" class="active">
                     <table style="background:white;" class="table">
                         <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Ver</th>
-                            <th>Descargar</th>
-                            <th>Descargado</th>
+                            <th>Apellido y Nombre</th>
+                            <th>Celular</th>
+                            <th>Instagram</th>
+                            <th>Mail</th>
+                            <th>Colegio</th>
                         </tr>
                         </thead>
-                        <tbody id="fechasBody"></tbody>
+                        <tbody id="contactosBody"></tbody>
                     </table>
-                </div>
-
-                <div id="loadingDiv" class="inactive">
-                    <h1>Cargando...</h1>
                 </div>
             </div>
         </div>
@@ -107,8 +86,7 @@
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/phonegap.js"></script>
-    <script type="text/javascript" src="js/vcard.js"></script>
-    <script type="text/javascript" src="js/admin.js"></script>
+    <script type="text/javascript" src="js/detalleContactos.js"></script>
     <script type="text/javascript">
         app.initialize();
     </script>
