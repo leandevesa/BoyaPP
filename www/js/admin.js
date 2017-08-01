@@ -1,3 +1,5 @@
+var empresa = null, edad = null;
+
 $(document).ready(function() {
 
     $("#loginBtn").click(function() {
@@ -11,16 +13,32 @@ $(document).ready(function() {
 
     $("#verContactosJump").click(function() {
 
-        sacarMenu();
-        mostrarCargando();
-        cargarFechas("Jump");
+        sacarEmpresa();
+        mostrarEdad();
+        empresa = "Jump";
     });
 
     $("#verContactosMatinee").click(function() {
 
-        sacarMenu();
-        mostrarCargando();
-        cargarFechas("Matinee");
+        sacarEmpresa();
+        mostrarEdad();
+        empresa = "Matinee";
+    });
+
+    $("#verContactosAdolescentes").click(function() {
+        
+        edad = "Adolescentes";
+
+        sacarEdad();
+        cargarFechas(empresa, edad);
+    });
+
+    $("#verContactosAdultos").click(function() {
+
+        edad = "Adultos";
+
+        sacarEdad();
+        cargarFechas(empresa, edad);
     });
 
     $("#passLogin").keypress(function(e) {
@@ -45,17 +63,19 @@ function auth() {
             $("#loginDiv").removeClass("inactive");
         } else {
 
-            $("#menuDiv").addClass("active");
-            $("#menuDiv").removeClass("inactive");
+            $("#divEmpresa").addClass("active");
+            $("#divEmpresa").removeClass("inactive");
         }
             
         sacarCargando();
     });
 }
 
-function cargarFechas(empresa) {
+function cargarFechas(empresa, edad) {
+
+    mostrarCargando();
     
-    firebase.database().ref('/contacts/' + empresa + "/").once('value').then(function(snapshot) {
+    firebase.database().ref('/contacts/' + empresa + "/" + edad + "/").once('value').then(function(snapshot) {
         
         var i = 0;
 
@@ -83,9 +103,14 @@ function cargarFechas(empresa) {
                     tr.append(ver);
 
                     var descarga = $("<td></td>");
-                    var botonDescarga = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar</a>');
+                    var botonDescarga = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar iPhone</a>');
                     descarga.append(botonDescarga);
                     tr.append(descarga);
+
+                    var descargaCSV = $("<td></td>");
+                    var botonDescargaCSV = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarCSV(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar CSV</a>');
+                    descargaCSV.append(botonDescargaCSV);
+                    tr.append(descargaCSV);
 
                     var descargado = $("<td></td>");
                     descargado.html((todos.descargado ? "Si" : "No"));
@@ -122,7 +147,6 @@ function descargarContactos(empresa, fecha, trIndex) {
         inicializarVCARD();
         
         var contactos = snapshot.val();
-        console.log(contactos);
 
         for (unaEdad in contactos) {
             var ids = contactos[unaEdad];
@@ -136,6 +160,25 @@ function descargarContactos(empresa, fecha, trIndex) {
 
         downloadVCARD(empresa, fecha);
         setDescargado(empresa, fecha, trIndex);
+    });
+}
+
+function descargarCSV(empresa, fecha, trIndex) {
+    
+    firebase.database().ref('/contacts/' + empresa + "/" + edad + "/" + fecha + "/").once('value').then(function(snapshot) {
+
+        inicializarCSV();
+        
+        var contactos = snapshot.val();
+
+        for (unId in contactos) {
+
+            var unContacto = contactos[unId];
+
+            agregarContactoACSV(unContacto, empresa, edad);
+        }
+
+        downloadCSV(empresa, fecha);
     });
 }
 
@@ -162,7 +205,17 @@ function sacarCargando() {
     $("#loadingDiv").addClass("inactive");
 }
 
-function sacarMenu() {
-    $("#menuDiv").removeClass("active");
-    $("#menuDiv").addClass("inactive");
+function sacarEmpresa() {
+    $("#divEmpresa").removeClass("active");
+    $("#divEmpresa").addClass("inactive");
+}
+
+function mostrarEdad() {
+    $("#divEdad").addClass("active");
+    $("#divEdad").removeClass("inactive");
+}
+
+function sacarEdad() {
+    $("#divEdad").removeClass("active");
+    $("#divEdad").addClass("inactive");
 }

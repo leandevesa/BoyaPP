@@ -13,15 +13,26 @@ $(document).ready(function() {
 
         sacarMenu();
         mostrarCargando();
-        cargarContactos("Jump");
+        cargarFechas("Jump");
     });
 
     $("#verContactosMatinee").click(function() {
 
         sacarMenu();
         mostrarCargando();
-        cargarContactos("Matinee");
+        cargarFechas("Matinee");
     });
+
+    $("#passLogin").keypress(function(e) {
+
+        if (e.which === 13) {
+            $("#loginBtn").click();
+        }
+    });
+
+    setTimeout(function() {
+        $("#passLogin").focus();
+    }, 250);
 });
 
 function auth() {
@@ -42,63 +53,129 @@ function auth() {
     });
 }
 
-function cargarContactos(edad) {
+function cargarFechas(empresa) {
     
-    firebase.database().ref('/contacts/' + edad + "/").once('value').then(function(snapshot) {
+    firebase.database().ref('/contacts/' + empresa + "/").once('value').then(function(snapshot) {
         
+        var i = 0;
+
         var contactos = snapshot.val();
-        console.log(contactos);
 
-        $("#contactosDiv").addClass("active");
-        $("#contactosDiv").removeClass("inactive");
+        for (unAnio in contactos) {
+            var meses = contactos[unAnio];
+            for (unMes in meses) {
+                var dias = meses[unMes];
+                for (unDia in dias) {
 
-        for (unaEdad in contactos) {
-            var anios = contactos[unaEdad];
-            for (unAnio in anios) {
-                var meses = anios[unAnio];
-                for (unMes in meses) {
-                    var dias = meses[unMes];
-                    for (unDia in dias) {
-                        var ids = dias[unDia];
-                        for (unId in ids) {
+                    var todos = dias[unDia];
 
-                            var unContacto = ids[unId];
+                    var tr = $("<tr></tr>");
 
-                            var tr = $("<tr></tr>");
+                    var fechaCompleta = unAnio + "/" + unMes + "/" + unDia;
 
-                            var fecha = $("<td></td>");
-                            fecha.html(unDia + "/" + unMes + "/" + unAnio);
-                            tr.append(fecha);
+                    var fecha = $("<td></td>");
+                    fecha.html(unDia + "/" + unMes + "/" + unAnio);
+                    tr.append(fecha);
 
-                            var nombreYApellido = $("<td></td>");
-                            nombreYApellido.html(unContacto.apellido + " " + unContacto.nombre);
-                            tr.append(nombreYApellido);
+                    var ver = $("<td></td>");
+                    var botonVer = $('<a style="width:100%;" class="btn btn-info btn-sm" href="javascript:detalleContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ')"" role="button">Ver</a>');
+                    ver.append(botonVer);
+                    tr.append(ver);
 
-                            var celular = $("<td></td>");
-                            celular.html(unContacto.celular);
-                            tr.append(celular);
+                    var descarga = $("<td></td>");
+                    var botonDescarga = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarContactos(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar iPhone</a>');
+                    descarga.append(botonDescarga);
+                    tr.append(descarga);
 
-                            var instagram = $("<td></td>");
-                            instagram.html(unContacto.instagram);
-                            tr.append(instagram);
+                    var descargaCSV = $("<td></td>");
+                    var botonDescargaCSV = $('<a style="width:100%;" class="btn btn-danger btn-sm" href="javascript:descargarCSV(' + "'" + empresa + "','" + fechaCompleta + "'" + ', ' + i.toString() + ')" role="button">Descargar CSV</a>');
+                    descargaCSV.append(botonDescargaCSV);
+                    tr.append(descargaCSV);
 
-                            var mail = $("<td></td>");
-                            mail.html(unContacto.mail);
-                            tr.append(mail);
+                    var descargado = $("<td></td>");
+                    descargado.html((todos.descargado ? "Si" : "No"));
+                    tr.append(descargado);
 
-                            var colegio = $("<td></td>");
-                            colegio.html(unContacto.colegio);
-                            tr.append(colegio);
-
-                            $("#contactosBody").append(tr);
-                        }
+                    if (!todos.descargado) {
+                        tr.addClass("info");
                     }
+
+                    $("#fechasBody").append(tr);
+                    i++;
                 }
             }
         }
 
+        $("#fechasDiv").addClass("active");
+        $("#fechasDiv").removeClass("inactive");
+
         sacarCargando();
     });
+}
+
+function detalleContactos(empresa, fecha) {
+
+    var url = "detalleContactos.html?empresa=" + empresa + "&fecha=" + fecha;
+
+    window.open(url, 'Detalle contactos', 'height=500, width=500');
+}
+
+function descargarContactos(empresa, fecha, trIndex) {
+    
+    firebase.database().ref('/contacts/' + empresa + "/" + fecha + "/").once('value').then(function(snapshot) {
+
+        inicializarVCARD();
+        
+        var contactos = snapshot.val();
+
+        for (unaEdad in contactos) {
+            var ids = contactos[unaEdad];
+            for (unId in ids) {
+
+                var unContacto = ids[unId];
+
+                agregarContactoAVCARD(unContacto, empresa, unaEdad);
+            }
+        }
+
+        downloadVCARD(empresa, fecha);
+        setDescargado(empresa, fecha, trIndex);
+    });
+}
+
+function descargarCSV(empresa, fecha, trIndex) {
+    
+    firebase.database().ref('/contacts/' + empresa + "/" + fecha + "/").once('value').then(function(snapshot) {
+
+        inicializarCSV();
+        
+        var contactos = snapshot.val();
+
+        for (unaEdad in contactos) {
+            var ids = contactos[unaEdad];
+            for (unId in ids) {
+
+                var unContacto = ids[unId];
+
+                agregarContactoACSV(unContacto, empresa, unaEdad);
+            }
+        }
+
+        downloadCSV(empresa, fecha);
+    });
+}
+
+function setDescargado(empresa, fecha, trIndex) {
+    var contacts = {};  
+    contacts['/contacts/' + empresa + "/" + fecha + "/descargado"] = true;
+
+    firebase.database().ref().update(contacts);
+
+    var tr = $($("#fechasBody").find("tr")[trIndex]);
+
+    tr.removeClass("info");
+
+    var td = tr.find("td").last().html("Si");
 }
 
 function mostrarCargando() {

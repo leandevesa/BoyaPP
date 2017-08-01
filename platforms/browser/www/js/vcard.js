@@ -43,7 +43,7 @@ function downloadVCARD(unaEmpresa, fecha) {
 
     fecha = fecha.replace(/\//g, "-");
 
-    var filename = "Contactos (" + unaEmpresa + "-" + edad + "-" + fecha + ").vcf";
+    var filename = "Contactos (" + unaEmpresa + "-" + fecha + ").vcf";
 
     vcf = vcf.replace("\n", String.fromCharCode(13));
     var pom = document.createElement('a');

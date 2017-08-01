@@ -9,51 +9,59 @@
     <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-    <link rel="icon" href="favicon.png">
     <title>Spirit</title>
 </head>
 
 <body>
     <div class="app">
         <div class="vertical-center back">
-            
-            <div id="detecting">
-                <label style="color:white;">Detectando conexion a internet...</label>
-            </div>
-
-            <div id="main" class="container" style="max-width:700px;display:none;">
+            <div class="container" style="max-width:700px">
 
                 <center>
-                    <a href="admin.html" role="button">
-                        <img src="img/LogoTransp.png" style="
-                            width: 300px;
-                        ">
-                    </a>
-                </center>                
+                    <img src="img/LogoTransp.png" style="
+                        width: 300px;
+                    ">
+                </center>
 
-                <div id="selEmpresa" class="active">
-                    <a class="btn btn-success btn-lg" href="edad.html?empresa=Matinee" role="button">Matinee</a>
+                <div id="selEdad">
+                    <a id="adultos" class="btn btn-danger btn-lg" href="#" role="button">Adultos</a>
                     <br><br>
-                    <a class="btn btn-info btn-lg" href="edad.html?empresa=Jump" role="button">Jump</a>
+                    <a id="adolescentes" class="btn btn-primary btn-lg" href="#" role="button">Adolescentes</a>
                 </div>
-
-                <br>
                 
-                <div id="divContactosOff">
-                    <a id="contactosOff">
-                        <h4 style="color:white;"></h4>
-                    </a>
-                </div>
             </div>
         </div>
     </div>
+    
 
     <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/phonegap.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/general.js"></script>
     <script type="text/javascript">
         app.initialize();
+</script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $("#adultos").click(function(e) {
+
+                e.preventDefault();
+
+                var empresa = getUrlParameter("empresa");
+                location.href = "datos.html?empresa=" + empresa + "&edad=Adultos";
+            });
+
+            $("#adolescentes").click(function(e) {
+
+                e.preventDefault();
+
+                var empresa = getUrlParameter("empresa");
+                location.href = "datos.html?empresa=" + empresa + "&edad=Adolescentes";
+            });
+        });
     </script>
 </body>
 
