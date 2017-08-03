@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="icon" href="favicon.png">
+    <title>Spirit</title>
+</head>
+
+<body>
+    <div class="app">
+        <div class="vertical-center back">
+
+            <div class="container" style="max-width:700px;">
+
+                <center>
+                    <h4 id="status" style="color:white;">Sincronizando...</h4>
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/phonegap.js"></script>
+    <script type="text/javascript" src="js/sincronizador.js"></script>
+
+    <script src="firebasejs/4.1.4/firebase.js"></script>    
+    <script src="firebasejs/3.8.0/firebase-app.js"></script>
+    <script src="firebasejs/3.8.0/firebase-database.js"></script>
+
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDa3U3NGCNiuG_mSChgTXlK6_yPDs-Q74U",
+        authDomain: "boyapp-f677f.firebaseapp.com",
+        databaseURL: "https://boyapp-f677f.firebaseio.com",
+        projectId: "boyapp-f677f",
+        storageBucket: "boyapp-f677f.appspot.com",
+        messagingSenderId: "911996174079"
+    };
+    firebase.initializeApp(config);
+    </script>
+
+    <script type="text/javascript">
+        app.initialize();
+    </script>
+</body>
+
+</html>

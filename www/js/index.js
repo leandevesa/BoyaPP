@@ -1,5 +1,28 @@
 $(document).ready(function() {
     checkInternet();
+
+    $("#contactosOff").click(function() {
+
+        var contactosOff = localStorage.getItem("contactosOff");
+        var status = localStorage.getItem("status");
+
+        if (!contactosOff) {
+
+            contactosOff = [];
+        } else {
+
+            contactosOff = JSON.parse(contactosOff);
+        }
+        var cantidad = 0;
+
+        if (contactosOff) {
+            cantidad = contactosOff.length;
+        }
+
+        if ((cantidad > 0) && (status === "online")) {
+
+        }
+    });
 });
 
 function checkInternet() {
@@ -23,6 +46,7 @@ function mostrarIndex() {
     $("#main").css("display", "block");
 
     var contactosOff = localStorage.getItem("contactosOff");
+    var status = localStorage.getItem("status");
 
     if (!contactosOff) {
 
@@ -37,5 +61,14 @@ function mostrarIndex() {
         cantidad = contactosOff.length;
     }
 
-    $("#contactosOff").find("h4").html("Tiene " + cantidad + " contactos sin sincronizar");
+    if (cantidad > 0) {
+        if (status === "online") {
+            $("#contactosOff").find("h4").html("Tiene " + cantidad + " contactos sin sincronizar. Click aqui para subirlos.");
+            $("#contactosOff").prop("href", "sincronizador.html");
+        } else {
+            $("#contactosOff").find("h4").html("Tiene " + cantidad + " contactos sin sincronizar. Conectese a internet para poder subirlos.");
+        }
+    } else {
+        $("#contactosOff").find("h4").html("No tiene contactos para sincronizar");
+    }
 }
